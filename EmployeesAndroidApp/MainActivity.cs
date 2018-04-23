@@ -23,19 +23,16 @@ namespace EmployeesAndroidApp
 
 			SetContentView(Resource.Layout.activity_main);
 
-			Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
-            SetSupportActionBar(toolbar);
-
 			FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
 
             eh = new EmployeesHelper("employees.json");
             EmployeesList = eh.GetEmployees();
-            /*eh.AddEmployee("{Id:999}");*/
             var list = (ListView)FindViewById(Resource.Id.employeesListView);
 
             var ListAdapter = new ArrayAdapter<String>(this, Android.Resource.Layout.SimpleListItem1, eh.GetEmployeesAsStrings());
             list.Adapter = ListAdapter;
+            list.ItemClick += EmployeesListView_ItemClick;
         }
 
 		public override bool OnCreateOptionsMenu(IMenu menu)
@@ -57,9 +54,12 @@ namespace EmployeesAndroidApp
 
         private void FabOnClick(object sender, EventArgs eventArgs)
         {
-            View view = (View) sender;
-            Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
-                .SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
+            StartActivity(typeof(AddEmployee));
+        }
+
+        private void EmployeesListView_ItemClick(object sender, AdapterView.ItemClickEventArgs e)
+        {
+            // StartActivity(typeof(AddEmployee));
         }
 	}
 }

@@ -81,5 +81,25 @@ namespace EmployeesLibrary
                 Mail = employee.Mail,
             });
         }
+
+        public string GetEmployee(string by)
+        {
+            var parsed = int.TryParse(by, out int id);
+            EmployeeModel result = null;
+            if (parsed)
+            {
+                result = GetEmployeeById(id);
+            }
+            else if (by.Contains("@"))
+            {
+                result = GetEmployeeByMail(by);
+            }
+            else
+            {
+                result = GetEmployeeByName(by);
+            }
+
+            return result != null ? result.ToString() : "Not found!";
+        }
     }
 }
