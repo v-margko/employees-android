@@ -1,69 +1,55 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-
-namespace EmployeesLibrary
+﻿namespace EmployeesLibrary
 {
+    using Newtonsoft.Json;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class EmployeesHelper
     {
+        private Database database;
         private List<EmployeeModel> employees;
-        private string employeesString;
-        string pathToJson;
 
-        public int MyProperty { get; set; }
-
-        public EmployeesHelper(string pathToJson)
+        public EmployeesHelper()
         {
-            this.pathToJson = pathToJson;
-
-            var assembly = IntrospectionExtensions.GetTypeInfo(typeof(EmployeesHelper)).Assembly;
-            Stream stream = assembly.GetManifestResourceStream("EmployeesLibrary.employees.json");
-            using (var reader = new StreamReader(stream))
-            {
-                employeesString = reader.ReadToEnd();
-            }
-
-            //employeesString = File.ReadAllText(pathToJson);
-            employees = new List<EmployeeModel>(JsonConvert.DeserializeObject<EmployeeModel[]>(employeesString));
+            database = Database.Current;
         }
 
         public List<EmployeeModel> GetEmployees()
         {
+            employees = database.GetAllEmployees<EmployeeModel>("Employees");
             employees.Sort((emp1, emp2) => emp1.Id.CompareTo(emp2.Id));
             return employees;
         }
 
         public List<string> GetEmployeesAsStrings()
         {
+            employees = database.GetAllEmployees<EmployeeModel>("Employees");
             employees.Sort((emp1, emp2) => emp1.Id.CompareTo(emp2.Id));
             return employees.Select((e) => e.ToString()).ToList();
         }
 
         public EmployeeModel GetEmployeeById(int id)
         {
-            this.MyProperty = 8;
+            employees = database.GetAllEmployees<EmployeeModel>("Employees");
             return employees.FirstOrDefault(e => e.Id == id);
         }
 
         public EmployeeModel GetEmployeeByMail(string mail)
         {
+            employees = database.GetAllEmployees<EmployeeModel>("Employees");
             return employees.FirstOrDefault(e => e.Mail == mail);
         }
 
         public EmployeeModel GetEmployeeByName(string name)
         {
+            employees = database.GetAllEmployees<EmployeeModel>("Employees");
             var names = name.Split(' ');
             return employees.FirstOrDefault(e => e.FirstName == names[0] && e.LastName == names[1]);
         }
 
         public void AddEmployee(EmployeeModel employeeModel)
         {
-            employees.Add(employeeModel);
-            /*File.Create("employees.json");
-            File.WriteAllText("employees.json", JsonConvert.SerializeObject(employees));*/
+            database.AddEmployee(employeeModel);
         }
 
         public void AddEmployee(string empl)
@@ -75,7 +61,6 @@ namespace EmployeesLibrary
             var employee = JsonConvert.DeserializeObject<EmployeeModel>(empl);
             this.AddEmployee(new EmployeeModel()
             {
-                Id = employee.Id,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 Mail = employee.Mail,

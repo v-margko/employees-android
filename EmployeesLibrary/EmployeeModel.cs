@@ -1,7 +1,12 @@
-﻿namespace EmployeesLibrary
+﻿
+namespace EmployeesLibrary
 {
+    using SQLite;
+
+    [Table("Employees")]
     public class EmployeeModel
     {
+        [PrimaryKey, AutoIncrement, Column("_id")]
         public int Id { get; set; }
 
         public string FirstName { get; set; }

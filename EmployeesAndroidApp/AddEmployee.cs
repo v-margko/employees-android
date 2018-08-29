@@ -1,11 +1,11 @@
-﻿using Android.App;
-using Android.OS;
-using Android.Widget;
-using EmployeesLibrary;
-using System;
-
-namespace EmployeesAndroidApp
+﻿namespace EmployeesAndroidApp
 {
+    using Android.App;
+    using Android.OS;
+    using Android.Widget;
+    using EmployeesLibrary;
+    using System;
+
     [Activity(Label = "AddEmployee")]
     public class AddEmployee : Activity
     {
@@ -16,7 +16,7 @@ namespace EmployeesAndroidApp
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.add_employee);
 
-            eh = new EmployeesHelper("emnployees.json");
+            eh = new EmployeesHelper();
 
             FindViewById<Button>(Resource.Id.add_employee_button).Click += AddEmployeeAction;
         }
@@ -25,12 +25,12 @@ namespace EmployeesAndroidApp
         {
             var employee = new EmployeeModel()
             {
-                Id = int.Parse(FindViewById<TextView>(Resource.Id.idInput).Text),
                 FirstName = FindViewById<TextView>(Resource.Id.firstNameInput).Text,
                 LastName = FindViewById<TextView>(Resource.Id.lastNameInput).Text,
                 Mail = FindViewById<TextView>(Resource.Id.mailInput).Text,
             };
             eh.AddEmployee(employee);
+            StartActivity(typeof(MainActivity));
         }
     }
 }
