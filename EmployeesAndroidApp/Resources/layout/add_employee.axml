@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/idInput"
         android:autoText="false"
+		android:enabled = "false"
         android:inputType="none|number"
         android:text="0" />
     <TextView
